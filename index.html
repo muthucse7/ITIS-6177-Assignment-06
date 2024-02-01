@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Muthu Selvam - Week 3</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body style="margin-top: 2rem; padding: 1rem;">
+    <div class="container-fluid">
+		<h1>Muthu Selvam - Week 03 (Frontend + Mock Server) </h1>
+	<hr>
+      <div class="row">
+		<form>
+        <div class="col-xs-12 mb-3">
+          <label for="title" class="form-label">Title:</label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Enter a title"
+			class="form-control"
+          />
+        </div>
+        <div class="col-xs-12 mb-3">
+          <label for="author" class="form-label">Author:</label>
+          <input
+            type="text"
+            name="author"
+            id="author"
+            placeholder="Enter an author"
+			class="form-control"
+          />
+        </div>
+        <div class="col-xs-12">
+          <button type="button" onclick="sendPost()" class="btn btn-primary">
+            Send
+          </button>
+        </div>
+      </div>
+	</form>
+    </div>
+	<hr>
+    <div class="row">
+      <div class="cok xs-12" id="list"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+    <script>
+      function sendPost() {
+        const title = document.getElementById("title").value;
+        const author = document.getElementById("author").value;
+        const req = {
+          title,
+          author,
+        };
+        axios
+          .post("http://localhost:3004/posts", req)
+          .then(function (response) {
+            console.log(response);
+            document.getElementById("title").value = "";
+            document.getElementById("title").focus();
+            document.getElementById("author").value = "";
+            getPosts();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      function getPosts() {
+        axios
+          .get("http://localhost:3004/posts")
+          .then(function (response) {
+            const list = document.getElementById("list");
+            if (response && response.data) {
+              list.innerHTML = "";
+              response.data.forEach((item) => {
+                list.innerHTML += "<br>" + item.title + " - " + item.author;
+              });
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      getPosts();
+    </script>
+  </body>
+</html>
